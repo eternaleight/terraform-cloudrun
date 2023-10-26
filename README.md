@@ -2,20 +2,10 @@
 
 
 
-以下のTerraform設定は、指定された仕様に基づいてGoogle Cloud Run サービスを作成します。設定項目には、コンテナポート、メモリ、CPU、リクエストタイムアウト、インスタンスあたりの最大同時リクエスト数、自動スケーリングの設定などが含まれます。
+以下は、指定された条件に基づいてCloud RunのTerraform設定を示したものです。
 
+### `cloud_run.tf`
 ```hcl
-variable "project_id" {}
-variable "region" {}
-variable "service_name" {}
-variable "github_owner" {}
-variable "github_repo" {}
-
-provider "google" {
-  project = var.project_id
-  region  = var.region
-}
-
 resource "google_cloud_run_service" "default" {
   name     = var.service_name
   location = var.region
@@ -23,17 +13,20 @@ resource "google_cloud_run_service" "default" {
   template {
     spec {
       containers {
-        image = "gcr.io/${var.project_id}/${var.service_name}"
+        image = var.image
         ports {
           container_port = 8001
         }
+        resources {
+          limits = {
+            memory = "128Mi"
+            cpu    = "1"
+          }
+        }
       }
-      service_account_name = google_service_account.cloud_run_service_account.email
 
       container_concurrency = 80
       timeout_seconds       = 300
-      memory                = "128Mi"
-      cpu                   = "1"
     }
   }
 
@@ -43,59 +36,57 @@ resource "google_cloud_run_service" "default" {
     latest_revision = true
   }
 
-  scaling {
-    min_instance_count = 0
-    max_instance_count = 1
-  }
-}
-
-resource "google_service_account" "cloud_run_service_account" {
-  account_id   = "cloud-run-service-account"
-  display_name = "Cloud Run Service Account"
-}
-
-resource "google_cloudbuild_trigger" "github_trigger" {
-  name = "github-trigger"
-  description = "Trigger for GitHub commits"
-  
-  github {
-    owner = var.github_owner
-    name = var.github_repo
-    push {
-      branch = "^main$"
+  metadata {
+    annotations = {
+      "autoscaling.knative.dev/minScale" = "0"
+      "autoscaling.knative.dev/maxScale" = "1"
     }
   }
-
-  filename = "cloudbuild.yaml"
-}
-
-resource "google_project_iam_member" "cloud_run_invoker" {
-  project = var.project_id
-  role    = "roles/run.invoker"
-  member  = "allUsers"
 }
 ```
 
-`cloudbuild.yaml` ファイルも前回の説明通りに設定してください。
-
-最後に、`terraform.tfvars` ファイルに必要な変数を設定して、Terraformを実行します。
-
+### `variables.tf`
 ```hcl
-project_id = "<YOUR_GCP_PROJECT_ID>"
-region = "asia-northeast1"
-service_name = "<YOUR_CLOUD_RUN_SERVICE_NAME>"
-github_owner = "<YOUR_GITHUB_USERNAME_OR_ORG_NAME>"
-github_repo = "<YOUR_GITHUB_REPO_NAME>"
+variable "project_id" {
+  description = "The GCP project ID"
+}
+
+variable "region" {
+  description = "The GCP region"
+  default     = "us-central1"
+}
+
+variable "service_name" {
+  description = "The name of the Cloud Run service"
+  default     = "my-cloud-run-service"
+}
+
+variable "image" {
+  description = "The image URL of the Cloud Run service"
+}
 ```
 
-実行コマンド:
+### `provider.tf`
+```hcl
+provider "google" {
+  credentials = file("<PATH_TO_YOUR_SERVICE_ACCOUNT_KEY_JSON>")
+  project     = var.project_id
+  region      = var.region
+}
+```
+
+上記のコードでは、環境変数やコンテナの引数などは設定されていません。これらの設定が必要な場合は、`containers`ブロック内に`env`や`args`を追加してください。
+
+また、`<PATH_TO_YOUR_SERVICE_ACCOUNT_KEY_JSON>`をサービスアカウントのキーファイルのパスに、`<YOUR_DOCKER_IMAGE_URL>`をDockerイメージのURLに置き換えて使用してください。
+
+Cloud Runの設定を適用するには、以下のコマンドを実行します。
 
 ```sh
 terraform init
-terraform apply -var-file="terraform.tfvars"
+terraform apply -var="project_id=<YOUR_GCP_PROJECT_ID>" -var="image=<YOUR_DOCKER_IMAGE_URL>"
 ```
 
-この設定でCloud Run サービスが作成され、GitHubリポジトリのコードがデプロイされるようになります。
+指定された条件に基づいてCloud Runのサービスが作成されます。
 
 
 
