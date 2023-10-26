@@ -1,4 +1,5 @@
-project_id                 = "<YOUR_GCP_PROJECT_ID>"
-image                      = "<YOUR_DOCKER_IMAGE_URL>"
-service_account_key_json   = "<PATH_TO_YOUR_SERVICE_ACCOUNT_KEY_JSON>"
-
+project_id = "<YOUR_GCP_PROJECT_ID>"
+region = "asia-northeast1"
+service_name = "<YOUR_CLOUD_RUN_SERVICE_NAME>"
+github_owner = "<YOUR_GITHUB_USERNAME_OR_ORG_NAME>"
+github_repo = "<YOUR_GITHUB_REPO_NAME>"
