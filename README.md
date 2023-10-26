@@ -89,14 +89,6 @@ terraform apply -var="project_id=<YOUR_GCP_PROJECT_ID>" -var="image=<YOUR_DOCKER
 指定された条件に基づいてCloud Runのサービスが作成されます。
 
 
-
-
-
-
-
-
-
-<br>
 <br>
 
 

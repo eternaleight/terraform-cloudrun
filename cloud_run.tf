@@ -3,6 +3,13 @@ resource "google_cloud_run_service" "default" {
   location = var.region
 
   template {
+    metadata {
+      annotations = {
+        "autoscaling.knative.dev/minScale" = "0"
+        "autoscaling.knative.dev/maxScale" = "1"
+      }
+    }
+
     spec {
       containers {
         image = "gcr.io/${var.project_id}/${var.service_name}"
@@ -28,13 +35,6 @@ resource "google_cloud_run_service" "default" {
   traffic {
     percent         = 100
     latest_revision = true
-  }
-
-  metadata {
-    annotations = {
-      "autoscaling.knative.dev/minScale" = "0"
-      "autoscaling.knative.dev/maxScale" = "1"
-    }
   }
 }
 
