@@ -53,7 +53,7 @@ variable "project_id" {
 
 variable "region" {
   description = "The GCP region"
-  default     = "us-central1"
+  default     = "asia-northeast1"
 }
 
 variable "service_name" {
