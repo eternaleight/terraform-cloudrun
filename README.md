@@ -1,7 +1,6 @@
 # Terraform-Cloudrun
 
 
-
 以下は、指定された条件に基づいてCloud RunのTerraform設定を示したものです。
 
 ### `cloud_run.tf`
