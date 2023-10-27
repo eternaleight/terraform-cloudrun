@@ -13,7 +13,11 @@ resource "google_cloud_run_service" "default" {
     spec {
       containers {
         image = "gcr.io/${var.project_id}/${var.service_name}"
-        
+        env {
+          name  = "ALLOWED_ORIGINS" 
+          value = var.ALLOWED_ORIGINS 
+        } 
+
         ports {
           container_port = 8001
         }
