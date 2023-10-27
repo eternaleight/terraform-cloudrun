@@ -1,3 +1,8 @@
+variable "env_vars" {
+  description = "Environment variables"
+  type        = map(string)
+}
+
 resource "google_cloud_run_service" "default" {
   name     = var.service_name
   location = var.region
@@ -13,10 +18,14 @@ resource "google_cloud_run_service" "default" {
     spec {
       containers {
         image = "gcr.io/${var.project_id}/${var.service_name}"
-        env {
-          name  = "ALLOWED_ORIGINS" 
-          value = var.ALLOWED_ORIGINS 
-        } 
+
+        dynamic "env" {
+          for_each = var.env_vars
+          content {
+            name  = env.key
+            value = env.value
+          }
+        }
 
         ports {
           container_port = 8001
@@ -29,9 +38,9 @@ resource "google_cloud_run_service" "default" {
           }
         }
       }
-      service_account_name = google_service_account.cloud_run_service_account.email
+      service_account_name  = google_service_account.cloud_run_service_account.email
       container_concurrency = 80
-      timeout_seconds = 300
+      timeout_seconds       = 300
     }
   }
 
@@ -48,12 +57,12 @@ resource "google_service_account" "cloud_run_service_account" {
 }
 
 resource "google_cloudbuild_trigger" "github_trigger" {
-  name = "github-trigger"
+  name        = "github-trigger"
   description = "Trigger for GitHub commits"
-  
+
   github {
     owner = var.github_owner
-    name = var.github_repo
+    name  = var.github_repo
     push {
       branch = "^main$"
     }
