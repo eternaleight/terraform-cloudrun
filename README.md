@@ -28,7 +28,8 @@ terraform init
 terraform apply　-var-file=".terraform.tfvars"
 ```
 
-## 使用方法
+## リソースの削除
+デプロイしたリソースを削除するには、以下のコマンドを実行します：
 ```sh
 terraform destroy　-var-file=".terraform.tfvars"
 ```
