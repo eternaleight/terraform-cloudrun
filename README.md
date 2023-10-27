@@ -2,7 +2,7 @@
 
 
 
-このTerraformプロジェクトは、Google Cloud Run サービス（コスト削減設定）のデプロイを自動化し、Google Service AccountとGitHubリポジトリからの継続的デプロイメントのためのGoogle Cloud Buildトリガーを利用します。
+このTerraformプロジェクトは、Google Cloud Run サービス（最小コスト設定）のデプロイを自動化し、Google Service AccountとGitHubリポジトリからの継続的デプロイメントのためのGoogle Cloud Buildトリガーを利用します。
 
 ## 前提条件
 - Terraformがインストールされている
