@@ -8,7 +8,7 @@
 - Terraformがインストールされている
 - Google Cloud SDKがインストールされている
 - Google Cloud Platformのアカウントがある
-- GitHubのアカウントがある
+- GitHubのアカウント（リポジトリ）がある
 
 ## セットアップ
 **Terraform変数の設定**: `.terraform.tfvars` ファイルを作成するか、Terraformのための環境変数をエクスポートします。
