@@ -87,6 +87,24 @@ terraform apply -var="project_id=<YOUR_GCP_PROJECT_ID>" -var="image=<YOUR_DOCKER
 
 指定された条件に基づいてCloud Runのサービスが作成されます。
 
+### tfvarsで作成
+tfvarsで変数を管理すると以下の様に実行できます。
+```sh
+terraform init
+terraform apply -var-file="terraform.tfvars"
+```
+
+`terraform.tfvars` ファイルには以下のように変数を設定します。
+
+```hcl
+project_id = "<YOUR_GCP_PROJECT_ID>"
+region = "asia-northeast1"
+service_name = "<YOUR_CLOUD_RUN_SERVICE_NAME>"
+github_owner = "<YOUR_GITHUB_USERNAME_OR_ORG_NAME>"
+github_repo = "<YOUR_GITHUB_REPO_NAME>"
+```
+
+
 
 <br>
 
