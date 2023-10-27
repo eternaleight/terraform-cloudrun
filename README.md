@@ -1,7 +1,7 @@
 # Terraform-Cloudrun
 
 
-## 概要
+
 このTerraformプロジェクトは、Google Cloud Run サービスのデプロイを自動化し、Google Service AccountとGitHubリポジトリからの継続的デプロイメントのためのGoogle Cloud Buildトリガーを利用します。
 
 ## 前提条件
